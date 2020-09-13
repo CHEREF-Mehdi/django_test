@@ -1,0 +1,93 @@
+{% extends 'base.html' %} {% block content %} {% load static %} 
+{% load crispy_forms_tags %}
+<script>
+  const CSRF_TOKEN = "{{ csrf_token }}";
+  const userEmail = "{{ user.email }}";
+  const userName = "{{ user.username }}";
+  const firstName = "{{ user.first_name }}";
+  const URL= "{% url 'user-home' %}"
+</script>
+
+<div class="card">
+  
+    <h5 class="card-header">Welcome to your profile <span class="p_first_name">{{ user.first_name }}</span> </h5>
+    <div class="card-body">
+
+      <h5 class="card-title" id="card_username">{{ user.username }}</h5>
+      <p class="card-text" >First name : <small class="text-muted p_first_name" >{{ user.first_name }}</small></p>
+      <p class="card-text" >Email : <small class="text-muted" id="p_email">{{ user.email }}</small></p>
+      <p class="card-text" >Registration date : <small class="text-muted" id="p_date_joined">{{ user.date_joined }}</small></p>
+
+      <div style="display: flex; justify-content: flex-end">
+        <button
+          class="btn btn-info"
+          data-toggle="modal"
+          data-target="#UserModal"
+        >
+          Update
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  
+
+  
+</div>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="UserModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="userModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userModalLabel">
+          Update user informations
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id='alertUpdateForm'></div>
+        <form method="POST" id="updateInfoForm">
+            {% csrf_token %}
+          <fieldset class="form-group">
+            {{ form|crispy }}
+          </fieldset>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" id="updateUserInfo" class="btn btn-primary">
+              Save changes
+            </button>
+          </div>
+        </form>
+        <script>
+          $( document ).ready(function() {
+            $('#id_email,#id_username').on('input', function() {
+                  $('#'+this.id).removeClass('is-invalid');
+            });
+          });
+        </script>
+      </div>
+    </div>
+  </div>
+
+<script src="{% static 'user/js/main.js' %}"></script>
+{% endblock content %}
