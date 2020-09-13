@@ -1,25 +1,38 @@
 {% extends 'base.html' %} {% block content %} {% load static %} 
 {% load crispy_forms_tags %}
 <script>
-  var CSRF_TOKEN = "{{ csrf_token }}";
-  var userEmail = "{{ user.username }}";
-  var userName = "{{ user.username }}";
-  var URL= "{% url 'user-home' %}"
+  const CSRF_TOKEN = "{{ csrf_token }}";
+  const userEmail = "{{ user.email }}";
+  const userName = "{{ user.username }}";
+  const firstName = "{{ user.first_name }}";
+  const URL= "{% url 'user-home' %}"
 </script>
 
-<div class="content-section media_body">
-  <h2 class="accout-heading" id="h2_username">{{ user.username }}</h2>
-  <p class="text-secondary" id="p_email">{{ user.email }}</p>
+<div class="card">
+  
+    <h5 class="card-header">Welcome to your profile <span class="p_first_name">{{ user.first_name }}</span> </h5>
+    <div class="card-body">
 
-  <div style="display: flex; justify-content: flex-end">
-    <button
-      class="btn btn-outline-info"
-      data-toggle="modal"
-      data-target="#UserModal"
-    >
-      Update
-    </button>
+      <h5 class="card-title" id="card_username">{{ user.username }}</h5>
+      <p class="card-text" >First name : <small class="text-muted p_first_name" >{{ user.first_name }}</small></p>
+      <p class="card-text" >Email : <small class="text-muted" id="p_email">{{ user.email }}</small></p>
+      <p class="card-text" >Registration date : <small class="text-muted" id="p_date_joined">{{ user.date_joined }}</small></p>
+
+      <div style="display: flex; justify-content: flex-end">
+        <button
+          class="btn btn-info"
+          data-toggle="modal"
+          data-target="#UserModal"
+        >
+          Update
+        </button>
+      </div>
+    </div>
   </div>
+  
+  
+
+  
 </div>
 <!-- Modal -->
 <div
@@ -46,6 +59,7 @@
         </button>
       </div>
       <div class="modal-body">
+        <div id='alertUpdateForm'></div>
         <form method="POST" id="updateInfoForm">
             {% csrf_token %}
           <fieldset class="form-group">
@@ -64,11 +78,16 @@
             </button>
           </div>
         </form>
+        <script>
+          $( document ).ready(function() {
+            $('#id_email,#id_username').on('input', function() {
+                  $('#'+this.id).removeClass('is-invalid');
+            });
+          });
+        </script>
       </div>
     </div>
   </div>
-</div>
 
 <script src="{% static 'user/js/main.js' %}"></script>
-<script src="{% static 'user/js/serializeJson.js' %}"></script>
 {% endblock content %}
